@@ -79,30 +79,6 @@ public class PillowController {
         return savedPillow;
     }
 
-    @PostMapping("/image/{id}")
-    public ResponseEntity<Pillow> addPillowImage (@PathVariable(value = "id") Integer pillowId,
-                                @RequestParam("file") MultipartFile file) throws IOException {
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
-            String uploadDirectory = System.getProperty("user.dir") + "/uploads";
-            File uploadDir = new File(uploadDirectory);
-
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + '.' + file.getOriginalFilename();
-            file.transferTo(new File(uploadDirectory + "/" + resultFileName));
-
-            Pillow pillow = pillowRepo.findById(pillowId).get();
-            pillow.setFileName(resultFileName);
-            final Pillow newPillow = pillowRepo.save(pillow);
-            return ResponseEntity.ok(newPillow);
-        }
-
-        return null;
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<Pillow> updatePillow (@PathVariable(value = "id") Integer pillowId,
                                                 @RequestParam("pillowName") String pillowName,
@@ -145,19 +121,6 @@ public class PillowController {
         return ResponseEntity.ok(newPillow);
     }
 
-//    @DeleteMapping("/{id}")
-//    public Map<String, Boolean> deletePillow (@PathVariable(value = "id") Integer pillowId)
-//    {
-//        Pillow pillow = pillowRepo.findById(pillowId).get();
-//
-//        pillowRepo.delete(pillow);
-//
-//        System.out.println(user);
-//
-//        Map<String, Boolean> response = new HashMap<>();
-//        response.put("deleted", Boolean.TRUE);
-//        return response;
-//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePillow (@PathVariable(value = "id") Integer pillowId)
